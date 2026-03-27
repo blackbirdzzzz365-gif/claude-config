@@ -53,6 +53,16 @@ fi
 # 2. Tạo symlink team-skills
 mkdir -p "$CLAUDE_DIR/plugins/custom"
 SYMLINK="$CLAUDE_DIR/plugins/custom/team-skills"
+
+if [ -d "$SYMLINK" ] && [ ! -L "$SYMLINK" ]; then
+  # Là thư mục thật (không phải symlink) → không dám xóa, dừng lại hỏi
+  echo "⚠️  Conflict: $SYMLINK là thư mục thật (không phải symlink)"
+  echo "   Đây có thể là bộ skills cũ của bạn. Xử lý thủ công:"
+  echo "   1. Backup: mv $SYMLINK $SYMLINK.bak"
+  echo "   2. Chạy lại: ./install.sh"
+  exit 1
+fi
+
 [ -L "$SYMLINK" ] && rm "$SYMLINK"
 ln -sf "$REPO_DIR/global/plugins/team-skills" "$SYMLINK"
 echo "✅ team-skills linked: $SYMLINK"
