@@ -4,10 +4,10 @@ description: >
   This skill should be used when the user asks to "tạo skill mới", "create new skill",
   "update skill", "sửa skill", "thêm skill vào team", "add skill to repo",
   "cập nhật skill", "improve skill", "đóng gói thành skill", "make this a skill",
-  "push skill lên repo", or wants to create or modify any Claude Code skill
-  for the team repository. Also use when the user has just described a workflow
-  they want to automate and wants to turn it into a reusable skill.
-version: 0.1.0
+  "push skill lên repo", "sync skill lên team", "update skills", "lấy skills mới nhất",
+  "cài đặt claude config", "setup claude", or wants to create, modify, or sync any
+  Claude Code skill or knowledge file for the team repository.
+version: 0.2.0
 argument-hint: <skill-name> [create|update]
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
@@ -31,19 +31,44 @@ Hỏi user (gộp thành 1 câu hỏi nếu chưa rõ):
 1. Tên skill cần sửa (hoặc path)
 2. Sửa gì cụ thể?
 
-## Bước 1 — Đọc context repo
-
-Xác định repo root:
+## Bước 1 — Tìm REPO_ROOT và team.sh
 
 ```bash
-git -C "$(dirname "$(find ~/.claude/plugins/custom/team-skills -name 'plugin.json' 2>/dev/null | head -1)")" rev-parse --show-toplevel 2>/dev/null || echo "NOT_FOUND"
+TEAM_SH="$(readlink ~/.claude/plugins/custom/team-skills)/../../../team.sh"
+REPO_ROOT="$(readlink ~/.claude/plugins/custom/team-skills)/../../.."
+```
+
+Hoặc resolve bằng:
+```bash
+SYMLINK_TARGET=$(readlink ~/.claude/plugins/custom/team-skills)
+REPO_ROOT=$(cd "$SYMLINK_TARGET/../../.." && pwd)
+TEAM_SH="$REPO_ROOT/team.sh"
 ```
 
 Nếu không tìm được → hỏi user path của `claude-config/`.
 
-Lưu path vào `REPO_ROOT`.
+## Bước 1b — Các tác vụ nhanh (không cần tạo skill)
 
-## Bước 2 — Tạo branch
+**Khi user nói "update skills" / "lấy skills mới nhất":**
+```bash
+bash "$TEAM_SH" update
+```
+Xong. Không cần làm thêm gì.
+
+**Khi user nói "sync lên team" / "đẩy thay đổi":**
+```bash
+bash "$TEAM_SH" sync
+```
+Script sẽ hỏi mô tả và xác nhận trước khi push. Không cần làm thêm gì.
+
+**Khi user nói "setup" / "cài đặt":**
+```bash
+bash "$TEAM_SH" setup
+```
+
+---
+
+## Bước 2 — Tạo branch (chỉ khi tạo/sửa skill)
 
 ```bash
 git -C "$REPO_ROOT" checkout main
@@ -115,61 +140,42 @@ cat "$REPO_ROOT/global/plugins/team-skills/skills/<category>/<skill-name>/SKILL.
 Chỉ sửa phần cần thay đổi — không rewrite toàn bộ file nếu không cần thiết.
 Bump version: `0.1.0` → `0.2.0` (minor change) hoặc `1.0.0` (major rewrite).
 
-## Bước 4 — Commit
+## Bước 4 — Commit và sync
 
 ```bash
 git -C "$REPO_ROOT" add global/plugins/team-skills/skills/<category>/<skill-name>/
 git -C "$REPO_ROOT" commit -m "skill(<skill-name>): <mô tả ngắn thay đổi>"
 ```
 
-Commit message format:
-- Tạo mới: `skill(ten-skill): add skill for <mục đích>`
-- Cập nhật: `skill(ten-skill): <cụ thể sửa gì>`
-
-## Bước 5 — Push và tạo PR
-
+Sau đó dùng team.sh để push:
 ```bash
-git -C "$REPO_ROOT" push origin skill/<tên-skill>
-gh pr create \
-  --repo evo-pm-vn-ai/claude-config \
-  --title "skill(<tên-skill>): <mô tả>" \
-  --body "$(cat <<'EOF'
-## Skill mới/cập nhật: <tên-skill>
-
-**Category:** shared / pm-workflow
-
-**Trigger phrases:**
-- "<phrase 1>"
-- "<phrase 2>"
-
-**Test:** Đã test trên máy local — [mô tả kết quả]
-
-**Files thay đổi:**
-- SKILL.md
-- references/<file> (nếu có)
-- templates/<file> (nếu có)
-EOF
-)"
+bash "$TEAM_SH" sync
 ```
 
-## Bước 6 — Báo cáo kết quả
+Hoặc push trực tiếp nếu đã có branch:
+```bash
+git -C "$REPO_ROOT" push origin skill/<tên-skill>
+gh pr create --repo evo-pm-vn-ai/claude-config \
+  --title "skill(<tên-skill>): <mô tả>" \
+  --body "Skill mới: <tên>. Trigger: '<phrase>'. Test OK trên local."
+```
 
-Sau khi tạo PR, trả về:
+## Bước 5 — Báo cáo kết quả
 
 ```
 ✅ Skill "<tên>" đã được tạo/cập nhật
 
 Branch:  skill/<tên-skill>
 PR:      <link PR>
-Files:   <danh sách files đã tạo/sửa>
+Files:   <danh sách files>
 
-Để test ngay: mở conversation mới trong Claude Code và nói "<trigger phrase>"
-Sau khi PR được merge: cả team chạy `git pull` để có skill mới
+Test ngay: mở conversation mới → nói "<trigger phrase>"
+Cả team nhận: ./team.sh update
 ```
 
 ## Lưu ý quan trọng
 
-Skill mới **có hiệu lực ngay** trên máy tạo ra nó nhờ symlink — không cần đợi merge.
-Chỉ sau khi merge + `git pull` thì cả team mới có.
+Skill mới **có hiệu lực ngay** trên máy tạo ra nó nhờ symlink.
+Chỉ sau khi merge + `./team.sh update` thì cả team mới có.
 
-Nếu user muốn test trên `_lab/` trước khi đưa vào `shared/` hoặc `pm-workflow/` → tạo branch và file trong `skills/_lab/<tên>/` trước, note lại để chuyển sau.
+Test trong `_lab/` trước nếu chưa chắc — chuyển ra `shared/` hoặc `pm-workflow/` khi ổn.
