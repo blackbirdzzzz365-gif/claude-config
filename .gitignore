@@ -1,0 +1,16 @@
+# Secrets
+.secrets
+*.key
+*.pem
+*.token
+
+# macOS
+.DS_Store
+
+# Temp
+.tmp/
+*.local
+
+# Editor
+.vscode/settings.json
+.idea/

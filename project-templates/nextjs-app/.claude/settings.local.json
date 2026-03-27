@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(next:*)",
+      "Bash(prisma:*)",
+      "Bash(jest:*)",
+      "Bash(vitest:*)"
+    ]
+  }
+}
