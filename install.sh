@@ -50,23 +50,22 @@ else
   echo "   Sau đó chạy lại ./install.sh"
 fi
 
-# 2. Tạo symlink team-skills
-mkdir -p "$CLAUDE_DIR/plugins/custom"
-SYMLINK="$CLAUDE_DIR/plugins/custom/team-skills"
+# 2. Copy skills vào ~/.claude/commands/
+# Claude Code đọc slash commands từ ~/.claude/commands/*.md (không hỗ trợ symlink plugins)
+COMMANDS_DIR="$CLAUDE_DIR/commands"
+SKILLS_DIR="$REPO_DIR/global/plugins/team-skills/skills"
+mkdir -p "$COMMANDS_DIR"
 
-if [ -d "$SYMLINK" ] && [ ! -L "$SYMLINK" ]; then
-  # Là thư mục thật (không phải symlink) → không dám xóa, dừng lại hỏi
-  echo "⚠️  Conflict: $SYMLINK là thư mục thật (không phải symlink)"
-  echo "   Đây có thể là bộ skills cũ của bạn. Xử lý thủ công:"
-  echo "   1. Backup: mv $SYMLINK $SYMLINK.bak"
-  echo "   2. Chạy lại: ./install.sh"
-  exit 1
-fi
-
-[ -L "$SYMLINK" ] && rm "$SYMLINK"
-ln -sf "$REPO_DIR/global/plugins/team-skills" "$SYMLINK"
-echo "✅ team-skills linked: $SYMLINK"
-echo "   → $REPO_DIR/global/plugins/team-skills"
+COPIED=0
+for skill_dir in "$SKILLS_DIR"/*/; do
+  skill_name=$(basename "$skill_dir")
+  [[ "$skill_name" == _* ]] && continue  # bỏ qua thư mục _lab, _draft, v.v.
+  if [ -f "$skill_dir/SKILL.md" ]; then
+    cp "$skill_dir/SKILL.md" "$COMMANDS_DIR/$skill_name.md"
+    COPIED=$((COPIED + 1))
+  fi
+done
+echo "✅ $COPIED skills copied → $COMMANDS_DIR"
 
 # 3. Nhắc auth MCP tools
 echo ""
