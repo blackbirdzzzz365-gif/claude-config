@@ -17,6 +17,45 @@ warn()    { echo -e "${YELLOW}⚠️ ${RESET}  $1"; }
 error()   { echo -e "${RED}❌${RESET} $1"; exit 1; }
 header()  { echo -e "\n${BOLD}$1${RESET}"; echo "────────────────────────────────"; }
 
+# ── Copy skills → ~/.claude/commands/p/ ───────
+sync_skills() {
+  COMMANDS_DIR="$CLAUDE_DIR/commands/p"
+  SKILLS_DIR="$REPO_DIR/global/plugins/team-skills/skills"
+  mkdir -p "$COMMANDS_DIR"
+
+  COPIED=0; NEW=0; REMOVED=0
+
+  # Copy SKILL.md từ mỗi skill folder vào commands/p/<skill-name>.md
+  for skill_dir in "$SKILLS_DIR"/*/; do
+    skill_name=$(basename "$skill_dir")
+    [[ "$skill_name" == _* ]] && continue  # bỏ qua _lab, _draft...
+    if [ -f "$skill_dir/SKILL.md" ]; then
+      dest="$COMMANDS_DIR/$skill_name.md"
+      [ ! -f "$dest" ] && NEW=$((NEW + 1))
+      cp "$skill_dir/SKILL.md" "$dest"
+      COPIED=$((COPIED + 1))
+    fi
+  done
+
+  # Xóa skill đã bị remove khỏi repo
+  for existing in "$COMMANDS_DIR"/*.md; do
+    [ -f "$existing" ] || continue
+    skill_name=$(basename "$existing" .md)
+    if [ ! -d "$SKILLS_DIR/$skill_name" ]; then
+      rm "$existing"
+      REMOVED=$((REMOVED + 1))
+      info "Removed: $skill_name (đã xóa khỏi repo)"
+    fi
+  done
+
+  if [ "$NEW" -gt 0 ]; then
+    success "$COPIED skills synced → ~/.claude/commands/p/ ($NEW mới, $REMOVED đã xóa)"
+  else
+    success "$COPIED skills synced → ~/.claude/commands/p/ (không có thay đổi)"
+  fi
+  info "Gọi bằng: /p/<skill-name> trong Claude Code"
+}
+
 # ══════════════════════════════════════════════
 #  SETUP — Cài đặt lần đầu trên máy mới
 # ══════════════════════════════════════════════
@@ -47,15 +86,8 @@ cmd_setup() {
     warn "settings.json giữ nguyên (cài jq để auto-merge: brew install jq)"
   fi
 
-  # 2. Symlink
-  mkdir -p "$CLAUDE_DIR/plugins/custom"
-  SYMLINK="$CLAUDE_DIR/plugins/custom/team-skills"
-  if [ -d "$SYMLINK" ] && [ ! -L "$SYMLINK" ]; then
-    error "Conflict: $SYMLINK là thư mục thật. Backup thủ công rồi chạy lại:\n   mv $SYMLINK $SYMLINK.bak"
-  fi
-  [ -L "$SYMLINK" ] && rm "$SYMLINK"
-  ln -sf "$REPO_DIR/global/plugins/team-skills" "$SYMLINK"
-  success "Team skills linked → $REPO_DIR/global/plugins/team-skills"
+  # 2. Copy skills vào ~/.claude/commands/p/
+  sync_skills
 
   # 3. Xong
   echo ""
@@ -86,9 +118,12 @@ cmd_update() {
   fi
 
   git pull origin main
+
+  # Sau khi pull, sync skills mới vào commands/
+  sync_skills
+
   echo ""
-  success "Skills đã được cập nhật!"
-  info "Symlink tự áp dụng — không cần restart Claude Code"
+  success "Xong! Skills mới nhất đã sẵn sàng trong Claude Code."
 }
 
 # ══════════════════════════════════════════════
