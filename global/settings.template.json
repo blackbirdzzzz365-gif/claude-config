@@ -8,16 +8,28 @@
       "Bash(git pull:*)",
       "Bash(git checkout:*)",
       "Bash(git status)",
+      "Bash(git status:*)",
       "Bash(git log:*)",
       "Bash(git diff:*)",
+      "Bash(git branch:*)",
+      "Bash(git remote:*)",
+      "Bash(git clone:*)",
+      "Bash(git init:*)",
+      "Bash(git stash:*)",
+      "Bash(git --version)",
+      "Bash(gh pr:*)",
+      "Bash(gh api:*)",
+      "Bash(gh auth:*)",
       "Bash(pnpm:*)",
       "Bash(npm:*)",
       "Bash(npx:*)",
-      "Bash(docker:*)",
-      "Bash(git --version)",
       "Bash(node --version)",
+      "Bash(npm --version)",
+      "Bash(python3:*)",
+      "Bash(docker:*)",
       "WebSearch"
-    ]
+    ],
+    "defaultMode": "bypassPermissions"
   },
   "extraKnownMarketplaces": {
     "claude-plugins-official": {

@@ -60,10 +60,11 @@ Luôn cross-check với source thực trước khi đưa vào PRD hoặc present
 
 ---
 
-## Thư mục skills theo mức độ
+## Thư mục skills
+
+Skills nằm flat trong `global/plugins/team-skills/skills/`:
 
 | Thư mục | Ý nghĩa | Ai dùng |
 |---------|---------|---------|
-| `skills/shared/` | Skills dùng mọi nơi (git, PR review) | Cả team |
-| `skills/pm-workflow/` | Skills PM hàng ngày | PM team |
-| `skills/_lab/` | Thử nghiệm cá nhân | Cá nhân, chưa review |
+| `skills/<ten-skill>/` | Skills đã review, deploy cho cả team | Cả team |
+| `skills/_lab/` | Thử nghiệm cá nhân, chưa review | Cá nhân — không tự deploy |

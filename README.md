@@ -1,65 +1,110 @@
 # claude-config
 
-Shared Claude Code skills, knowledge base, và config cho PM team.
+Shared Claude Code skills, knowledge base, và config cho PM team tại [ts-evo-pm](https://github.com/ts-evo-pm).
 
 ## Setup máy mới (15 phút)
 
 ### Bước 1: Clone repo
+
 ```bash
-git clone https://github.com/TÊN-ORG/claude-config.git ~/claude-config
+git clone https://github.com/ts-evo-pm/claude-config.git ~/claude-config
 cd ~/claude-config
-chmod +x install.sh update.sh
+chmod +x install.sh team.sh
 ./install.sh
 ```
 
 ### Bước 2: Auth MCP Tools
 Mở Claude Code và dùng từng tool lần đầu để kích hoạt:
-- Figma, BigQuery, Slack, Google Calendar
+- **Figma** → dùng tool Figma → login browser
+- **BigQuery** → dùng tool BigQuery → login Google
+- **Slack** → dùng tool Slack → login workspace
+- **Google Calendar** → login Google
 
-Auth lưu local. Mỗi máy mới làm 1 lần.
+Auth lưu local trên máy này. Mỗi máy mới làm 1 lần.
 
-## Cập nhật skills hàng ngày
+---
+
+## Cập nhật skills
+
 ```bash
 cd ~/claude-config && git pull
 ```
-Symlink tự áp dụng, không cần chạy install.sh lại.
+
+Skills tự đồng bộ. Không cần restart Claude Code.
+
+---
 
 ## Thêm skill mới
+
 Xem [CONTRIBUTING.md](./CONTRIBUTING.md)
 
-## Cấu trúc
-```
-global/
-└── plugins/team-skills/skills/
-    ├── shared/        Skills dùng cho mọi project (commit, review PR...)
-    ├── pm-workflow/   Skills riêng PM team
-    └── _lab/          Thử nghiệm cá nhân, chưa chính thức
+---
 
-knowledge/             Context sản phẩm, quy ước team, PM framework reference
-project-templates/     CLAUDE.md template cho project mới
+## Cấu trúc
+
 ```
+claude-config/
+├── install.sh                  # Setup lần đầu (copy skills + merge settings)
+├── team.sh                     # CLI tool: setup / update / sync
+│
+├── global/
+│   ├── settings.template.json  # Permissions mặc định cho máy mới
+│   └── plugins/team-skills/
+│       └── skills/             # Tất cả PM skills
+│           ├── _lab/           # Thử nghiệm cá nhân (không deploy)
+│           ├── write-prd/
+│           ├── user-stories/
+│           └── ...
+│
+├── knowledge/                  # Context sản phẩm, quy ước team, PM frameworks
+└── project-templates/          # CLAUDE.md template cho project mới
+    ├── pm-project/
+    └── nextjs-app/
+```
+
+---
 
 ## PM Skills có sẵn
 
-| Trigger | Skill | Mô tả |
-|---------|-------|--------|
-| `/write-prd` | write-prd | Tạo PRD đầy đủ 8 sections |
-| `/user-stories` | user-stories | Viết user stories + acceptance criteria |
-| `/research-users` | product-research | Tổng hợp interview, competitive analysis |
-| `/analyze-metrics` | product-analyst | Metrics framework, SQL, A/B test |
-| `/pre-mortem` | critical-thinking | Pre-mortem, devil's advocate, assumption mapping |
-| `/prioritize` | prioritize | RICE/MoSCoW/Kano scoring |
-| `/meeting-notes` | meeting-notes | Tổng hợp meeting → decisions + action items |
-| `/stakeholder-update` | stakeholder-update | Weekly RAG update, GTM plan |
+Gọi bằng `/p/<skill-name>` trong Claude Code (gõ `/p` rồi Tab để autocomplete).
+
+| Trigger | Mô tả |
+|---------|-------|
+| `/p/write-prd` | Tạo PRD đầy đủ 8 sections hoặc one-page brief |
+| `/p/user-stories` | Viết user stories + acceptance criteria |
+| `/p/product-research` | Tổng hợp interview, competitive analysis |
+| `/p/product-analyst` | Metrics framework, SQL queries, A/B test |
+| `/p/critical-thinking` | Pre-mortem, devil's advocate, assumption mapping |
+| `/p/prioritize` | RICE / MoSCoW / Kano scoring |
+| `/p/meeting-notes` | Tổng hợp meeting → decisions + action items |
+| `/p/stakeholder-update` | Weekly RAG update, GTM plan, stakeholder map |
+| `/p/review-pr` | Review Pull Request |
+| `/p/write-commit` | Tạo git commit message chuẩn |
+| `/p/manage-skill` | Tạo hoặc cập nhật skill mới |
+
+---
 
 ## Khi gặp vấn đề
 
-### Symlink bị mất
+### Skills không hiện trong Claude Code
+
 ```bash
+# Kiểm tra skills đã được copy chưa
+ls ~/.claude/commands/p/
+
+# Nếu thiếu → sync lại
 cd ~/claude-config && ./install.sh
 ```
 
-### Skills không hiện trong Claude Code
-1. Kiểm tra symlink: `ls -la ~/.claude/plugins/custom/`
-2. Nếu không có → chạy `./install.sh`
-3. Restart Claude Code
+### Settings không áp dụng
+
+Kiểm tra `~/.claude/settings.json` đã có permissions từ template chưa:
+```bash
+cat ~/.claude/settings.json | grep defaultMode
+```
+
+### Cần sync lại toàn bộ
+
+```bash
+cd ~/claude-config && git pull && ./install.sh
+```
