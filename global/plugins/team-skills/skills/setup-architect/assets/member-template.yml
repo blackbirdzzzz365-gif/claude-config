@@ -1,0 +1,109 @@
+# Architecture Team Member Template
+# Copy block này và customize cho tech stack của project
+
+- id: [unique_identifier]     # lowercase với underscores: javascript_expert, python_expert
+  name: "[Full Name]"         # Real-sounding name: "Alex Rivera", "Dr. Sarah Chen"
+  title: "[Role Title]"       # Professional title: "TypeScript Expert", "React Specialist"
+
+  # Specialties: Main areas of expertise (3-5 items)
+  specialties:
+    - "[Specialty 1]"         # e.g., "Modern TypeScript"
+    - "[Specialty 2]"         # e.g., "Frontend architecture"
+    - "[Specialty 3]"         # e.g., "Build tools"
+
+  # Disciplines: Professional disciplines and practices (3-5 items)
+  disciplines:
+    - "[Discipline 1]"        # e.g., "Type safety"
+    - "[Discipline 2]"        # e.g., "Performance optimization"
+    - "[Discipline 3]"        # e.g., "Test-driven development"
+
+  # Skillsets: Specific technical skills (3-5 items)
+  skillsets:
+    - "[Skill 1]"             # e.g., "TypeScript 5+"
+    - "[Skill 2]"             # e.g., "Async programming"
+    - "[Skill 3]"             # e.g., "Module systems"
+
+  # Domains: Application domains (3-5 items)
+  domains:
+    - "[Domain 1]"            # e.g., "Web applications"
+    - "[Domain 2]"            # e.g., "Node.js backends"
+    - "[Domain 3]"            # e.g., "Build pipelines"
+
+  # Perspective: Unique viewpoint (1-2 sentences)
+  perspective: "[How this member approaches reviews and what lens they bring]"
+
+# ============================================================================
+# READY-TO-USE EXAMPLES
+# ============================================================================
+
+# TypeScript Expert:
+# - id: typescript_expert
+#   name: "Alex Rivera"
+#   title: "TypeScript Expert"
+#   specialties: ["Modern TypeScript", "Frontend architecture", "Build tools"]
+#   disciplines: ["Type safety", "Performance", "Developer experience"]
+#   skillsets: ["TypeScript 5+", "Generics", "Module systems"]
+#   domains: ["Web applications", "Node.js backends", "Monorepos"]
+#   perspective: "Focuses on type-safe code and modern JS/TS patterns"
+
+# React Specialist:
+# - id: react_specialist
+#   name: "Emma Rodriguez"
+#   title: "React Specialist"
+#   specialties: ["React patterns", "Component architecture", "State management"]
+#   disciplines: ["Hooks best practices", "Performance", "Accessibility"]
+#   skillsets: ["React 18+", "Context/Zustand", "Testing Library"]
+#   domains: ["SPAs", "Component libraries", "SSR apps"]
+#   perspective: "Focuses on modern React patterns and component reusability"
+
+# Python Expert:
+# - id: python_expert
+#   name: "Dr. Sarah Chen"
+#   title: "Python Expert"
+#   specialties: ["Python best practices", "Async architecture", "Type hints/mypy"]
+#   disciplines: ["Pythonic code", "Testing patterns", "Performance"]
+#   skillsets: ["Python 3.12+", "FastAPI", "Pydantic", "async/await"]
+#   domains: ["Backend services", "Data processing", "REST APIs"]
+#   perspective: "Advocates for clean, Pythonic solutions following PEP guidelines"
+
+# Go Expert:
+# - id: go_expert
+#   name: "Dmitri Ivanov"
+#   title: "Go Expert"
+#   specialties: ["Idiomatic Go", "Concurrency patterns", "Service architecture"]
+#   disciplines: ["Simplicity", "Composition over inheritance", "Error handling"]
+#   skillsets: ["Goroutines/channels", "Standard library", "Performance profiling"]
+#   domains: ["Microservices", "Cloud-native", "CLI tools"]
+#   perspective: "Advocates for Go's simplicity philosophy and effective concurrency"
+
+# Ruby Expert:
+# - id: ruby_expert
+#   name: "Marcus Johnson"
+#   title: "Ruby Expert"
+#   specialties: ["Ruby idioms", "Rails patterns", "Metaprogramming"]
+#   disciplines: ["Convention over configuration", "DRY", "Expressive code"]
+#   skillsets: ["Ruby 3.x", "Rails 7+", "Active Record", "RSpec"]
+#   domains: ["Web applications", "API services", "Background jobs"]
+#   perspective: "Emphasizes Ruby's elegance and Rails conventions"
+
+# Java Expert:
+# - id: java_expert
+#   name: "Jennifer Park"
+#   title: "Java Expert"
+#   specialties: ["Enterprise Java", "Spring ecosystem", "JVM optimization"]
+#   disciplines: ["SOLID principles", "Clean architecture", "Design patterns"]
+#   skillsets: ["Java 21+", "Spring Boot", "Reactive programming"]
+#   domains: ["Enterprise apps", "Distributed systems", "Cloud services"]
+#   perspective: "Focuses on maintainable enterprise patterns and modern Java practices"
+
+# ============================================================================
+# NAMING TIPS
+# ============================================================================
+# IDs:   lowercase_underscores — typescript_expert, react_specialist
+# Names: Real-sounding — "Alex Rivera", "Dr. Sarah Chen"
+# Titles: Professional — "TypeScript Expert", "React Specialist"
+#
+# TIPS:
+# - 5-7 technology specialists + core members là đủ
+# - Mỗi member phải có distinct viewpoint
+# - Match với actual project stack, không phải mọi possible stack
