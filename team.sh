@@ -56,6 +56,17 @@ sync_skills() {
   info "Gọi bằng: /p/<skill-name> trong Claude Code"
 }
 
+sync_codex_skills() {
+  if [ ! -d "$HOME/.codex" ]; then
+    warn "Không thấy ~/.codex — bỏ qua sync Codex skills"
+    return
+  fi
+
+  bash "$REPO_DIR/scripts/sync-codex-skills.sh"
+  success "Codex skills synced → ~/.codex/skills"
+  info "Dùng trong chat Codex mới bằng cách gọi tên skill hoặc mô tả đúng intent"
+}
+
 # ══════════════════════════════════════════════
 #  SETUP — Cài đặt lần đầu trên máy mới
 # ══════════════════════════════════════════════
@@ -89,7 +100,10 @@ cmd_setup() {
   # 2. Copy skills vào ~/.claude/commands/p/
   sync_skills
 
-  # 3. Xong
+  # 3. Sync skills vào ~/.codex/skills
+  sync_codex_skills
+
+  # 4. Xong
   echo ""
   echo -e "${BOLD}🎉 Setup xong!${RESET}"
   echo ""
@@ -121,9 +135,10 @@ cmd_update() {
 
   # Sau khi pull, sync skills mới vào commands/
   sync_skills
+  sync_codex_skills
 
   echo ""
-  success "Xong! Skills mới nhất đã sẵn sàng trong Claude Code."
+  success "Xong! Skills mới nhất đã sẵn sàng trong Claude Code và Codex."
 }
 
 # ══════════════════════════════════════════════
@@ -180,6 +195,8 @@ cmd_help() {
   echo "Sau khi setup, bạn cũng có thể nói với Claude Code:"
   echo "  • \"update skills\"           → Claude chạy ./team.sh update"
   echo "  • \"sync skill mới lên team\" → Claude chạy ./team.sh sync"
+  echo ""
+  echo "Codex skills được sync vào ~/.codex/skills khi chạy setup/update."
   echo ""
 }
 

@@ -32,6 +32,14 @@ cd ~/claude-config && git pull
 
 Skills tự đồng bộ. Không cần restart Claude Code.
 
+Để sync sang Codex:
+
+```bash
+cd ~/claude-config && ./scripts/sync-codex-skills.sh
+```
+
+Skills sẽ được cài vào `~/.codex/skills/` và dùng được trong các chat Codex mới.
+
 ---
 
 ## Thêm skill mới
@@ -81,6 +89,12 @@ Gọi bằng `/p/<skill-name>` trong Claude Code (gõ `/p` rồi Tab để autoc
 | `/p/review-pr` | Review Pull Request |
 | `/p/write-commit` | Tạo git commit message chuẩn |
 | `/p/manage-skill` | Tạo hoặc cập nhật skill mới |
+| `/p/implement-system-design` | Biến architecture doc thành implementation slices + contracts |
+
+Trong Codex, gọi bằng cách nhắc trực tiếp tên skill hoặc intent tương ứng, ví dụ:
+- `dùng skill write-prd để draft PRD cho feature onboarding`
+- `review-pr giúp mình review diff này`
+- `prioritize backlog này theo RICE`
 
 ---
 

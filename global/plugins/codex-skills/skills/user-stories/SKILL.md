@@ -6,10 +6,8 @@ description: >
   "write Given/When/Then", "viết job stories", or wants to convert product requirements
   into sprint-ready user stories with acceptance criteria. Also use when asked to check
   if existing stories meet INVEST criteria.
-version: 0.2.0
-argument-hint: <epic-or-feature-description>
-allowed-tools: [Read, Write, Glob]
 ---
+
 
 # User Stories
 

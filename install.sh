@@ -82,7 +82,14 @@ done
 echo "✅ $COPIED skills synced → $COMMANDS_DIR ($NEW new)"
 echo "   Gọi bằng: /p/<skill-name>"
 
-# 3. Nhắc auth MCP tools
+# 3. Sync Codex skills vào ~/.codex/skills
+if [ -d "$HOME/.codex" ]; then
+  bash "$REPO_DIR/scripts/sync-codex-skills.sh"
+  echo "✅ Codex skills synced → $HOME/.codex/skills"
+  echo "   Dùng trong chat mới bằng cách gọi tên skill tự nhiên, ví dụ: write-prd"
+fi
+
+# 4. Nhắc auth MCP tools
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "⚠️  Bước cuối (làm thủ công): Auth MCP Tools"
